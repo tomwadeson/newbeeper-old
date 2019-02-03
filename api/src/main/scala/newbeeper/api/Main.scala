@@ -7,17 +7,23 @@ import org.http4s.implicits._
 import org.http4s.server.Router
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.{HttpApp, HttpRoutes}
+import pureconfig.generic.auto._
 
 object Main extends IOApp {
 
-  override def run(args: List[String]): IO[ExitCode] =
+  override def run(args: List[String]): IO[ExitCode] = {
+
+    val config =
+      pureconfig.loadConfigOrThrow[Environment]
+
     BlazeServerBuilder[IO]
-      .bindHttp(8080, "localhost")
+      .bindHttp(config.http.port.value, config.http.hostname.value)
       .withHttpApp(routes)
       .serve
       .compile
       .drain
       .as(ExitCode.Success)
+  }
 
   val helloWorldService: HttpRoutes[IO] = {
 
