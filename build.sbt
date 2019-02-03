@@ -27,7 +27,7 @@ lazy val core =
     .settings(commonSettings)
     .settings(
       name := "newbeeper-core",
-        
+
       libraryDependencies ++= Seq(
         "co.fs2"        %% "fs2-core"    % fs2Version,
         "co.fs2"        %% "fs2-io"      % fs2Version,
