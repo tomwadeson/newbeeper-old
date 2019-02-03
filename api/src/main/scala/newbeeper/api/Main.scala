@@ -7,7 +7,6 @@ import org.http4s.implicits._
 import org.http4s.server.Router
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.{HttpApp, HttpRoutes}
-import pureconfig.generic.auto._
 
 object Main extends IOApp {
 

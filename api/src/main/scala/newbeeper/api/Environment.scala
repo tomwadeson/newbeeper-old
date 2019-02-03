@@ -1,5 +1,9 @@
 package newbeeper.api
 
+import pureconfig.ConfigReader
+import pureconfig.generic.auto._
+import pureconfig.generic.semiauto._
+
 final case class Environment(http: Environment.Http)
 
 object Environment {
@@ -12,4 +16,7 @@ object Environment {
 
     final case class Port(value: Int) extends AnyVal
   }
+
+  implicit val environmentReader: ConfigReader[Environment] =
+    deriveReader[Environment]
 }
