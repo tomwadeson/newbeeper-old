@@ -1,6 +1,7 @@
 resolvers += Resolver.sonatypeRepo("releases")
-addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.9")
-addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.0-M4")
+
+ThisBuild / libraryDependencies += compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.9")
+ThisBuild / libraryDependencies += compilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.0-M4")
 
 enablePlugins(JavaAppPackaging)
 
