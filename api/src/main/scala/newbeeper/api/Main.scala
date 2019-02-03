@@ -4,10 +4,9 @@ import cats.data.{Kleisli, OptionT}
 import cats.effect.{ExitCode, IO, IOApp}
 import cats.implicits._
 import org.http4s.dsl.Http4sDsl
-import org.http4s.implicits._
-import org.http4s.server.{AuthMiddleware, Router}
+import org.http4s.server.AuthMiddleware
 import org.http4s.server.blaze.BlazeServerBuilder
-import org.http4s.{AuthedService, HttpApp, HttpRoutes, Request}
+import org.http4s.{AuthedService, HttpRoutes, Request}
 
 object Main extends IOApp {
 
@@ -16,9 +15,15 @@ object Main extends IOApp {
     val config =
       pureconfig.loadConfigOrThrow[Environment]
 
+    val httpApp =
+      Routes(
+        helloWorldService,
+        Auth.middleware(secretMessageService)
+      ).httpApp
+
     BlazeServerBuilder[IO]
       .bindHttp(config.http.port.value, config.http.hostname.value)
-      .withHttpApp(routes)
+      .withHttpApp(httpApp)
       .serve
       .compile
       .drain
@@ -46,12 +51,9 @@ object Main extends IOApp {
         Ok(s"I've got a secret for you, ${user.name}")
     }
   }
-
-  val routes: HttpApp[IO] =
-    Router(
-      "/" -> (helloWorldService <+> Auth.middleware(secretMessageService))
-    ).orNotFound
 }
+
+final case class User(id: Long, name: String)
 
 object Auth {
   val authUser: Kleisli[OptionT[IO, ?], Request[IO], User] =
@@ -60,5 +62,3 @@ object Auth {
   val middleware: AuthMiddleware[IO, User] =
     AuthMiddleware(authUser)
 }
-
-final case class User(id: Long, name: String)
