@@ -2,6 +2,8 @@ resolvers += Resolver.sonatypeRepo("releases")
 addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.9")
 addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.0-M4")
 
+enablePlugins(JavaAppPackaging)
+
 ThisBuild / organization := "com.newbeeper"
 ThisBuild / version      := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := "2.12.8"
@@ -20,7 +22,12 @@ lazy val commonSettings = Seq(
 
 lazy val root =
   (project in file("."))
+    .settings(
+      name := "newbeeper",
+      mainClass in Compile := Some("newbeeper.api.Main")
+    )
     .aggregate(core, api)
+    .dependsOn(core, api)
 
 lazy val core =
   (project in file("core"))
