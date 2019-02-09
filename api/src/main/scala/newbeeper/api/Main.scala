@@ -2,7 +2,7 @@ package newbeeper.api
 
 import cats.data.{Kleisli, OptionT}
 import cats.effect.{ExitCode, IO, IOApp}
-import cats.implicits._
+import newbeeper.core.InMemoryInstructorRepo
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.AuthMiddleware
 import org.http4s.server.blaze.BlazeServerBuilder
@@ -15,19 +15,24 @@ object Main extends IOApp {
     val config =
       pureconfig.loadConfigOrThrow[Environment]
 
-    val httpApp =
-      Routes(
+    for {
+      instructorRepo <- InMemoryInstructorRepo[IO]
+      instructorService = new InstructorService(instructorRepo)
+
+      httpApp = Routes(
         helloWorldService,
-        Auth.middleware(secretMessageService)
+        Auth.middleware(secretMessageService),
+        instructorService.routes
       ).httpApp
 
-    BlazeServerBuilder[IO]
-      .bindHttp(config.http.port.value, config.http.hostname.value)
-      .withHttpApp(httpApp)
-      .serve
-      .compile
-      .drain
-      .as(ExitCode.Success)
+      _ <- BlazeServerBuilder[IO]
+            .bindHttp(config.http.port.value, config.http.hostname.value)
+            .withHttpApp(httpApp)
+            .serve
+            .compile
+            .drain
+
+    } yield ExitCode.Success
   }
 
   val helloWorldService: HttpRoutes[IO] = {

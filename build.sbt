@@ -12,9 +12,10 @@ val fs2Version                 = "1.0.2"
 val catsVersion                = "1.5.0"
 val catsEffectVersion          = "1.1.0"
 val http4sVersion              = "0.20.0-M5"
-val scalatestVersion           = "3.0.5"
+val circeVersion               = "0.11.0"
 val pureconfigVersion          = "0.10.1"
 val shapelessVersion           = "2.3.3"
+val scalatestVersion           = "3.0.5"
 val scalacheckVersion          = "1.14.0"
 val scalacheckShapelessVersion = "1.2.0-1"
 
@@ -57,11 +58,13 @@ lazy val api =
       name := "newbeeper-api",
 
       libraryDependencies ++= Seq(
-        "org.http4s"            %% "http4s-core"         % http4sVersion,
-        "org.http4s"            %% "http4s-dsl"          % http4sVersion,
-        "org.http4s"            %% "http4s-blaze-server" % http4sVersion,
-        "org.http4s"            %% "http4s-blaze-client" % http4sVersion,
-        "org.http4s"            %% "http4s-circe"        % http4sVersion,
-        "com.github.pureconfig" %% "pureconfig"          % pureconfigVersion
+        "org.http4s"            %% "http4s-core"          % http4sVersion,
+        "org.http4s"            %% "http4s-dsl"           % http4sVersion,
+        "org.http4s"            %% "http4s-blaze-server"  % http4sVersion,
+        "org.http4s"            %% "http4s-blaze-client"  % http4sVersion,
+        "org.http4s"            %% "http4s-circe"         % http4sVersion,
+        "io.circe"              %% "circe-core"           % circeVersion,
+        "io.circe"              %% "circe-generic-extras" % circeVersion,
+        "com.github.pureconfig" %% "pureconfig"           % pureconfigVersion
       )
     ).dependsOn(core)

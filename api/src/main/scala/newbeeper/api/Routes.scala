@@ -8,10 +8,12 @@ import org.http4s.implicits._
 
 final case class Routes[F[_]](
     helloWorldService: HttpRoutes[F],
-    secretMessageService: HttpRoutes[F]) {
+    secretMessageService: HttpRoutes[F],
+    instructorService: HttpRoutes[F]) {
 
   def httpApp(implicit F: Sync[F]): HttpApp[F] =
     Router(
-      "/" -> (helloWorldService <+> secretMessageService)
+      "/" -> (helloWorldService <+> secretMessageService),
+      "/instructors" -> instructorService
     ).orNotFound
 }
