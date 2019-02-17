@@ -16,7 +16,7 @@ object Main extends IOApp {
       instructorService = new InstructorService(instructorRepo)
 
       httpApp = Routes(
-        instructorService.routes
+        instructorService
       ).httpApp
 
       _ <- BlazeServerBuilder[IO]
