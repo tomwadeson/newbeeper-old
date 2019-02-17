@@ -10,7 +10,7 @@ trait Codecs {
       ev: T <:< AnyVal,
       unwrapped: Unwrapped.Aux[T, U],
       decoder: Decoder[U]): Decoder[T] = Decoder.instance[T] { cursor =>
-    ev.hashCode()
+    val _ = ev
     decoder(cursor).map(unwrapped.wrap)
   }
 
@@ -19,7 +19,7 @@ trait Codecs {
       ev: T <:< AnyVal,
       unwrapped: Unwrapped.Aux[T, U],
       encoder: Encoder[U]): Encoder[T] = Encoder.instance[T] { value =>
-    ev.hashCode()
+    val _ = ev
     encoder(unwrapped.unwrap(value))
   }
 }
