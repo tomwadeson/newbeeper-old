@@ -4,6 +4,7 @@ import cats.effect.IO
 import cats.implicits._
 import io.circe.generic.auto._
 import io.circe.syntax._
+import newbeeper.api.InstructorService.InstructorForm
 import newbeeper.core.{InMemoryInstructorRepo, Instructor}
 import org.http4s.circe._
 import org.http4s.client.Client
@@ -21,7 +22,7 @@ class InstructorServiceSpec extends FreeSpec with PropertyChecks with Codecs {
 
     val request = Request[IO](method = Method.POST)
 
-    forAll { instructorForm: Instructor[Unit] =>
+    forAll { instructorForm: InstructorForm =>
       val (response, created) =
         withClient { client =>
           for {
@@ -39,7 +40,7 @@ class InstructorServiceSpec extends FreeSpec with PropertyChecks with Codecs {
 
     val createInstructorReq = Request[IO](method = Method.POST)
 
-    forAll { instructorForms: List[Instructor[Unit]] =>
+    forAll { instructorForms: List[InstructorForm] =>
       val (created, retrieved) =
         withClient { client =>
           for {
@@ -64,7 +65,7 @@ class InstructorServiceSpec extends FreeSpec with PropertyChecks with Codecs {
     "should retrieve the instructor when they exist" in {
       val createInstructorReq = Request[IO](method = Method.POST)
 
-      forAll { instructorForm: Instructor[Unit] =>
+      forAll { instructorForm: InstructorForm =>
         val (created, retrieved) =
           withClient { client =>
             for {
@@ -97,7 +98,7 @@ class InstructorServiceSpec extends FreeSpec with PropertyChecks with Codecs {
 
     "should update the instructor when they exist" in {
 
-      forAll { (instructorForm: Instructor[Unit], patchForm: InstructorPatch) =>
+      forAll { (instructorForm: InstructorForm, patchForm: InstructorPatch) =>
         val (created, updated, retrieved) =
           withClient { client =>
             for {
@@ -140,7 +141,7 @@ class InstructorServiceSpec extends FreeSpec with PropertyChecks with Codecs {
     val createReq = Request[IO](method = Method.POST)
     val deleteReq = Request[IO](method = Method.DELETE)
 
-    forAll { instructorForm: Instructor[Unit] =>
+    forAll { instructorForm: InstructorForm =>
       val (retrievedPreDelete, retrievedPostDelete) =
         withClient { client =>
           for {

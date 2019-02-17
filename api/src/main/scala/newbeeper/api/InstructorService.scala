@@ -4,6 +4,7 @@ import cats.effect.Sync
 import cats.implicits._
 import io.circe.generic.auto._
 import io.circe.syntax._
+import newbeeper.api.InstructorService.InstructorForm
 import newbeeper.core.{Instructor, InstructorRepo}
 import org.http4s.{EntityDecoder, HttpRoutes}
 import org.http4s.circe._
@@ -18,7 +19,7 @@ final class InstructorService[F[_]: Sync](instructorRepo: InstructorRepo[F])
 
     case req @ POST -> Root =>
       for {
-        instructorForm <- req.as[Instructor[Unit]]
+        instructorForm <- req.as[InstructorForm]
         instructor <- instructorRepo.create(instructorForm)
         response <- Created(instructor.asJson)
       } yield response
@@ -45,8 +46,8 @@ final class InstructorService[F[_]: Sync](instructorRepo: InstructorRepo[F])
       Ok(instructorRepo.delete(Instructor.Id(id)))
   }
 
-  implicit val instructorFormDecoder: EntityDecoder[F, Instructor[Unit]] =
-    jsonOf[F, Instructor[Unit]]
+  implicit val instructorFormDecoder: EntityDecoder[F, InstructorForm] =
+    jsonOf[F, InstructorForm]
 
   implicit val instructorPatchDecoder: EntityDecoder[F, InstructorPatch] =
     jsonOf[F, InstructorPatch]
@@ -54,6 +55,8 @@ final class InstructorService[F[_]: Sync](instructorRepo: InstructorRepo[F])
 }
 
 object InstructorService {
+
+  type InstructorForm = Instructor[Unit]
 
   def updateWithPatch(patch: InstructorPatch): Instructor ~> Instructor =
     new ~>[Instructor, Instructor] {
