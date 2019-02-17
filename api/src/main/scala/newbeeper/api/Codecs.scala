@@ -3,7 +3,7 @@ package newbeeper.api
 import io.circe.{Decoder, Encoder}
 import shapeless.Unwrapped
 
-trait InstructorCodecs {
+trait Codecs {
 
   implicit def decodeAnyVal[T, U](
       implicit
@@ -24,4 +24,4 @@ trait InstructorCodecs {
   }
 }
 
-object InstructorCodecs extends InstructorCodecs
+object Codecs extends Codecs

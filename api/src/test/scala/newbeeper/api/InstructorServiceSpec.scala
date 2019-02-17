@@ -15,7 +15,7 @@ import org.scalacheck.ScalacheckShapeless._
 import org.scalatest.FreeSpec
 import org.scalatest.prop.PropertyChecks
 
-class InstructorServiceSpec extends FreeSpec with PropertyChecks with InstructorCodecs {
+class InstructorServiceSpec extends FreeSpec with PropertyChecks with Codecs {
 
   "POST to /instructors should create an instructor" in {
 

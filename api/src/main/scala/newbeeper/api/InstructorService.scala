@@ -12,7 +12,7 @@ import shapeless.PolyDefns.~>
 
 final class InstructorService[F[_]: Sync](instructorRepo: InstructorRepo[F])
     extends Http4sDsl[F]
-    with InstructorCodecs {
+    with Codecs {
 
   val routes: HttpRoutes[F] = HttpRoutes.of[F] {
 
